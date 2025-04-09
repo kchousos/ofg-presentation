@@ -207,7 +207,7 @@ sequenceDiagram
 ::: {#refs}
 :::
 
-These slides can be found at: <https://kchousos.github.io/presentations/oss-fuzz-gen/>
+These slides can be found at: <https://kchousos.github.io/ofg-presentation>
 
 # Thank you!
 
