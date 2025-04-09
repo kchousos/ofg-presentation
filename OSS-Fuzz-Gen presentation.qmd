@@ -26,7 +26,7 @@ csl: "/home/kchou/Documents/Zotero/styles/ieee.csl"
 lightbox: true
 fig-cap-location: margin
 email-obfuscation: javascript
-defaultTiming: 60
+defaultTiming: 40
 format:
   clean-revealjs:
     menu: false
