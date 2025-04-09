@@ -6,7 +6,7 @@ hubs:
   - "[[Thesis CLOG]]"
 tags:
   - presentation
-title: OSS-Fuzz-Gen
+title: Intro to OSS-Fuzz-Gen
 title-slide-attributes:
   data-background-image: "https://google.github.io/clusterfuzz/images/logo.png"
   data-background-size: 40%
@@ -50,7 +50,7 @@ format:
 
 Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled from an input space (the "fuzz input space") that protrudes the expected input space of the PUT [@manesArtScienceEngineering2019].
 
-![Overview of a fuzz campaign.](https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png){width=40%}
+![Overview of a fuzz campaign.](https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png){width="40%"}
 
 ::: notes
 Είδος testing όπου τρέχουμε το Program Under Test (PUT) με "τυχαία" inputs. Στόχος είναι να κάνουμε το πρόγραμμα να κρασάρει, άρα να βρούμε κάποιο error.
@@ -63,15 +63,17 @@ Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled fr
 
 ### what is fuzzing?
 
-- These inputs are often generated or mutated automatically.
- 
-  Generational fuzzing
-  : Inputs generated randomly from a [BNF grammar](https://www.researchgate.net/publication/343973528/figure/fig2/AS:936345279135746@1600253519649/BNF-grammar-describing-the-basic-statement-syntax-of-a-binding-policy.png).
+-   These inputs are often generated or mutated automatically.
 
-  Mutational fuzzing
-  : Inputs resulted from mutating inputs from a pre-existing corpus. 
+    Generational fuzzing
 
-- Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).
+    :   Inputs generated randomly from a [BNF grammar](https://www.researchgate.net/publication/343973528/figure/fig2/AS:936345279135746@1600253519649/BNF-grammar-describing-the-basic-statement-syntax-of-a-binding-policy.png).
+
+    Mutational fuzzing
+
+    :   Inputs resulted from mutating inputs from a pre-existing corpus.
+
+-   Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).
 
 ## Fuzzing
 
@@ -84,13 +86,13 @@ Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled fr
     -   Adds more fuzzing strategies, better speed, and QEMU/Unicorn support.
     -   Superseded by **AFL++** [@heuseAFL2022].
 
-## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size="20%" background-position="90% 90%" background-opacity="0.4"}
 
 > LibFuzzer is an in-process, coverage-guided, evolutionary fuzzing engine. LibFuzzer is linked with the library under test, and feeds fuzzed inputs to the library via a specific fuzzing entrypoint (fuzz target).
 
 Used to fuzz library functions. The programmer writes a *fuzz target* to test their implementation.
 
-## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size="20%" background-position="90% 90%" background-opacity="0.4"}
 
 ::: {.callout-note title="Fuzz target"}
 A function that accepts an array of bytes and does something interesting with these bytes using the API under test [@LibFuzzerLibraryCoverageguided].
@@ -98,7 +100,7 @@ A function that accepts an array of bytes and does something interesting with th
 A.K.A. fuzz driver, fuzzer entry point, harness.
 :::
 
-## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size="20%" background-position="90% 90%" background-opacity="0.4"}
 
 ### Fuzz target structure
 
@@ -119,7 +121,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 **Πρόσεχε, τα lines έχουν highlight**
 :::
 
-## AFL++ {background-image="https://avatars.githubusercontent.com/u/62360046?v=4" background-size=10% background-position="90% 90%" background-opacity="0.4" }
+## AFL++ {background-image="https://avatars.githubusercontent.com/u/62360046?v=4" background-size="10%" background-position="90% 90%" background-opacity="0.4"}
 
 AFL fuzzes programs/binaries. The inputs are taken from the `seeds_dir` and their mutations.
 
@@ -137,7 +139,7 @@ $ ./afl-fuzz -i seeds_dir -o output_dir -- /path/to/tested/program
 Μπορεί να χρησιμοποιήσει και `LLVMFuzzerTestOneInput` harnesses.
 :::
 
-# OSS-Fuzz {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size=40% background-position="80% 50%" background-opacity="0.4" }
+# OSS-Fuzz {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size="40%" background-position="80% 50%" background-opacity="0.4"}
 
 ## OSS-Fuzz
 
@@ -145,10 +147,10 @@ $ ./afl-fuzz -i seeds_dir -o output_dir -- /path/to/tested/program
 
 Scalable, distributed, CI fuzzing solution for open-source projects [@aryaOSSFuzz2025].
 
-- Supports *LibFuzzer*, *AFL++*, *Honggfuzz* and *Centipede* fuzzing engines.
-- Supports C/C++, Rust, Go, Python and Java/JVM projects.
-- Based on ClusterFuzz [@GoogleClusterfuzz2025].
-- Started in 2016, in response to the Heartbleed vulnerability [@HeartbleedBug].
+-   Supports *LibFuzzer*, *AFL++*, *Honggfuzz* and *Centipede* fuzzing engines.
+-   Supports C/C++, Rust, Go, Python and Java/JVM projects.
+-   Based on ClusterFuzz [@GoogleClusterfuzz2025].
+-   Started in 2016, in response to the Heartbleed vulnerability [@HeartbleedBug].
 
 > The vulnerability had the potential to affect almost every internet user, yet was caused by a relatively simple memory buffer overflow bug that could have been detected by fuzzing [@OSSFuzzDocumentation].
 
@@ -160,48 +162,48 @@ Scalable, distributed, CI fuzzing solution for open-source projects [@aryaOSSFuz
 
 ### Problems
 
-- Upfront cost of writing fuzz targets.
-- Integration specifications[^1]:
-	- project.yaml
-	- Dockerfile
-	- build.sh
-- Required Google developer account.
+-   Upfront cost of writing fuzz targets.
+-   Integration specifications[^1]:
+    -   project.yaml
+    -   Dockerfile
+    -   build.sh
+-   Required Google developer account.
 
 [^1]: Must transform project to ClusterFuzz's [@GoogleClusterfuzz2025] structure.
 
-:::notes
+::: notes
 Χρειάζεται ο προγραμματιστής να γράψει τα fuzz targets και να σετάρει το project για integration με το OSS-Fuzz.
 
 Google account to access to the ClusterFuzz web interface.
 :::
 
-# OSS-Fuzz-Gen {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size=40% background-position="80% 50%" background-opacity="0.4" }
+# OSS-Fuzz-Gen {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size="40%" background-position="80% 50%" background-opacity="0.4"}
 
 ## OSS-Fuzz-Gen
 
 > This framework generates fuzz targets for real-world C/C++, Java, Python projects with various Large Language Models (LLM) and benchmarks them via the OSS-Fuzz platform [@Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024].
 
-- Goal: Take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness [@oss-fuzzmaintainersIntroducingLLMbasedHarness2024].
+-   Goal: Take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness [@oss-fuzzmaintainersIntroducingLLMbasedHarness2024].
 
-![](https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png){fig-align='center'}
+![](https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png){fig-align="center"}
 
 ## OSS-Fuzz-Gen
 
 ### Architecture
 
-![](https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png){fig-align='center'}
+![](https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png){fig-align="center"}
 
-::: {.fragment}
-:::{.callout-warning}
+:::: fragment
+::: callout-warning
 The project must come with preexisting fuzz targets. [Fuzz-Introspector](https://github.com/ossf/fuzz-introspector) gives the LLM info about the **harnesses**, not the main program/functions.
 :::
-:::
+::::
 
 ::: notes
 Δεδομένου ενός github repo link, γίνονται τα ακόλουθα:
 
 1.  compile το project με βάση κάποια predefined generic scripts κι άλλα "build heuristics"
-2.  ξανά compile με Fuzz Introspector για program analysis -> json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.
+2.  ξανά compile με Fuzz Introspector για program analysis -\> json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.
 3.  το report χρησιμοποιείται σε ένα prompt που δίνεται στο LLM για να παράξει harness για κάποια συγκεκριμένη συνάρτηση.
 4.  Κάθε harness τεστάρετε για το αν δουλεύει και δεν κρασάρει κατευθείαν. Μετά γίνονται integrated σε OSS-Fuzz/ClusterFuzzLite projects.
 :::
@@ -210,9 +212,9 @@ The project must come with preexisting fuzz targets. [Fuzz-Introspector](https:/
 
 ### LLM Prompting
 
-1. Input: Fuzz-Introspector `json` code reports.
-2. Include the above in prompt templates → send to LLM.
-3. Result: Harness returned from LLM.
+1.  Input: Fuzz-Introspector `json` code reports.
+2.  Include the above in prompt templates → send to LLM.
+3.  Result: Harness returned from LLM.
 
 ::: notes
 we have implemented several “harness-generators” that take as input the introspector reports and use this to create human-readable (LLM-readable) prompts which direct the LLM towards creating fuzz harnesses. The high-level idea is to generate textual descriptions of the target functions that are likely to produce a good harness by the LLM.
@@ -228,7 +230,7 @@ we have implemented several “harness-generators” that take as input the intr
 
 ### Results
 
-![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png){fig-align='center' .stretch .lightbox}
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png){.stretch .lightbox fig-align="center"}
 
 > One of our sample projects, `tinyxml2`, went from 38% line coverage to 69% without any interventions from our team.
 
@@ -236,8 +238,8 @@ we have implemented several “harness-generators” that take as input the intr
 
 ### Problems
 
-- Project needs to be part of OSS-Fuzz to use OSS-Fuzz-Gen's capabilities.
-	- Same hinderances as OSS-Fuzz.
+-   Project needs to be part of OSS-Fuzz to use OSS-Fuzz-Gen's capabilities.
+    -   Same hinderances as OSS-Fuzz.
 
 # `from_scratch` Branch {background-color="#40666e"}
 
@@ -251,62 +253,62 @@ The work for this feature is located in <https://github.com/google/oss-fuzz-gen/
 
 ## Demo Time
 
-1. Clone and install Fuzz-Introspector.
-2. Clone and setup OSS-Fuzz-Gen.
-	1. Checkout working commit: `$ git checkout 171aac2`{.bash}.
-	2. Export API key.
-3. Prepare a target project.
-   [README](https://github.com/google/oss-fuzz-gen/tree/main/experimental/from_scratch#readme) uses [dvhar/dateparse](https://github.com/dvhar/dateparse).
-4. Execute the script:
-  ```bash
-  ❯ python3 -m experimental.from_scratch.generate \
-                --language c++ \
-                --model gpt-4 \
-                --function dateparse \
-                --target-dir ../../dvhar/dateparse/ \
-                --out-dir out
-  ```
+1.  Clone and install Fuzz-Introspector.
+2.  Clone and setup OSS-Fuzz-Gen.
+    1.  Checkout working commit: `$ git checkout 171aac2`{.bash}.
+    2.  Export API key.
+3.  Prepare a target project. [README](https://github.com/google/oss-fuzz-gen/tree/main/experimental/from_scratch#readme) uses [dvhar/dateparse](https://github.com/dvhar/dateparse).
+4.  Execute the script:
+
+``` bash
+❯ python3 -m experimental.from_scratch.generate \
+              --language c++ \
+              --model gpt-4 \
+              --function dateparse \
+              --target-dir ../../dvhar/dateparse/ \
+              --out-dir out
+```
 
 ## Demo Time
 
 ### Result
 
-```c
+``` c
 // out/01.rawoutput
 <code>
 #include <stdint.h>
 #include <stddef.h>
 
 typedef struct {
-	int sec;     /* seconds after the minute - [ 0 to 59 ] */
-	int min;     /* minutes after the hour - [ 0 to 59 ] */
-	int hour;    /* hours since midnight - [ 0 to 23] */
-	int mday;    /* day of the month - [ 1 to 31 ] */
-	int mon;     /* months since January - [ 0 to 11 ] */
-	int year;    /* years */
-	int wday;    /* days since Sunday - [ 0 to 6 ] */
-	int yday;    /* days since January 1 - [ 0 to 365 ] */
+    int sec;     /* seconds after the minute - [ 0 to 59 ] */
+    int min;     /* minutes after the hour - [ 0 to 59 ] */
+    int hour;    /* hours since midnight - [ 0 to 23] */
+    int mday;    /* day of the month - [ 1 to 31 ] */
+    int mon;     /* months since January - [ 0 to 11 ] */
+    int year;    /* years */
+    int wday;    /* days since Sunday - [ 0 to 6 ] */
+    int yday;    /* days since January 1 - [ 0 to 365 ] */
 } date_t;
 
 extern int dateparse(const char* datestr, date_t* t, int *offset, int stringlen);
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-	// Ignore input if it is less than 1
-	if (size < 1) {
-		return 0;
-	}
+    // Ignore input if it is less than 1
+    if (size < 1) {
+        return 0;
+    }
 
-	// Convert data to string
-	char *datestr = (char *)data;
+    // Convert data to string
+    char *datestr = (char *)data;
 
-	// Initialize a date_t struct and an offset integer
-	date_t t;
-	int offset = 0;
+    // Initialize a date_t struct and an offset integer
+    date_t t;
+    int offset = 0;
 
-	// Call the function-under-test
-	dateparse(datestr, &t, &offset, (int)size);
+    // Call the function-under-test
+    dateparse(datestr, &t, &offset, (int)size);
 
-	return 0;
+    return 0;
 }
 </code>
 ```
@@ -315,10 +317,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
 ### Problems
 
-1. Response wrapped in `<code>` tags.
-2. Even without them, harness does not compile.
-3. Missing headers.
-
+1.  Response wrapped in `<code>` tags.
+2.  Even without them, harness does not compile.
+3.  Missing headers.
 
 # Where do we go from here? {background-color="#40666e"}
 
@@ -328,17 +329,17 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
 A GitHub action that when integrated to a C/C++ project will:
 
-1. Use LLMs to create fuzz targets from scratch.
-2. Build and run them, evaluate them based on runtime, coverage etc.
-3. Create PRs to integrate them to the project.
+1.  Use LLMs to create fuzz targets from scratch.
+2.  Build and run them, evaluate them based on runtime, coverage etc.
+3.  Create PRs to integrate them to the project.
 
 ## Future work
 
 ### "Good to have" features
 
-1. No strict prerequisites
-	- E.g. project structure, build system.
-2. Support for Python projects using the Atheris [@GoogleAtheris2025] fuzzer.
+1.  No strict prerequisites
+    -   E.g. project structure, build system.
+2.  Support for Python projects using the Atheris [@GoogleAtheris2025] fuzzer.
 
 ## Future work
 
@@ -363,7 +364,7 @@ flowchart LR
 ::: {#refs .smaller}
 :::
 
-## {.center}
+##  {.center}
 
 These slides can be found at: <https://kchousos.github.io/ofg-presentation/>
 
