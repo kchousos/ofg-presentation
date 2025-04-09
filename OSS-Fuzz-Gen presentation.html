@@ -9,15 +9,6 @@
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/quarto-syntax-highlighting-f857f066592719f7e45e1c552765fa0b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script src="OSS-Fuzz-Gen presentation_files/libs/clipboard/clipboard.min.js"></script>
-<script src="OSS-Fuzz-Gen presentation_files/libs/quarto-html/tabby.min.js"></script>
-<script src="OSS-Fuzz-Gen presentation_files/libs/quarto-html/popper.min.js"></script>
-<script src="OSS-Fuzz-Gen presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/quarto-syntax-highlighting-f857f066592719f7e45e1c552765fa0b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.22">
 
@@ -292,16 +283,6 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
           width: 1px!important;
           overflow: hidden!important;
           display:block!important;
-      }</style><style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
       }</style></aside>
 </section>
 <section id="fuzzing-2" class="slide level2">
@@ -375,21 +356,11 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <div class="sourceCode" id="cb1" data-code-line-numbers="|1|2"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href=""></a><span class="kw">extern</span> <span class="st">"C"</span> <span class="dt">int</span> LLVMFuzzerTestOneInput<span class="op">(</span><span class="dt">const</span> <span class="dt">uint8_t</span> <span class="op">*</span>Data<span class="op">,</span> <span class="dt">size_t</span> Size<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb1-2"><a href=""></a>  DoSomethingWithData<span class="op">(</span>Data<span class="op">,</span> Size<span class="op">);</span></span>
 <span id="cb1-3"><a href=""></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-4"><a href=""></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href=""></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>Τέτοιο signature χρειάζεται το libfuzzer που φτιάχνει δικό του binary. Το AFL++ τρέχει το original binary.</p>
 <p><strong>Πρόσεχε, τα lines έχουν highlight</strong></p>
 <style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style><style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
           clip: rect(1px, 1px, 1px, 1px);
@@ -404,7 +375,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <section id="afl" class="slide level2" data-background-image="https://avatars.githubusercontent.com/u/62360046?v=4" data-background-size="10%" data-background-position="90% 90%" data-background-opacity="0.4">
 <h2>AFL++</h2>
 <p>AFL fuzzes programs/binaries. The inputs are taken from the <code>seeds_dir</code> and their mutations.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href=""></a><span class="ex">$</span> ./afl-fuzz <span class="at">-i</span> seeds_dir <span class="at">-o</span> output_dir <span class="at">--</span> /path/to/tested/program</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href=""></a><span class="ex">$</span> ./afl-fuzz <span class="at">-i</span> seeds_dir <span class="at">-o</span> output_dir <span class="at">--</span> /path/to/tested/program</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>Works on black-box or instrumented binaries.</li>
 <li>Uses fork-server model for speed.</li>
@@ -414,16 +385,6 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <p>Μπορεί επίσης να χρησιμοποιηθεί για fuzzing βιβλιοθηκών κτλ., απλά αντί για <code>LLVMFuzzerTestOneInput</code> έχουμε την <code>main</code>.</p>
 <p>Μπορεί να χρησιμοποιήσει και <code>LLVMFuzzerTestOneInput</code> harnesses.</p>
 <style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style><style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
           clip: rect(1px, 1px, 1px, 1px);
@@ -488,18 +449,8 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
           width: 1px!important;
           overflow: hidden!important;
           display:block!important;
-      }</style><style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
       }</style></aside>
-<aside><div><ol class="aside-footnotes"><li id="fn1"><p>Must transform project to ClusterFuzz’s <span class="citation" data-cites="GoogleClusterfuzz2025"><a href="#/references" role="doc-biblioref" onclick="">[6]</a></span> structure.</p></li></ol></div></aside></section></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Must transform project to ClusterFuzz’s <span class="citation" data-cites="GoogleClusterfuzz2025"><a href="#/references" role="doc-biblioref" onclick="">[6]</a></span> structure.</p></li></ol></aside></section></section>
 <section>
 <section id="oss-fuzz-gen" class="title-slide slide level1 center" data-background-color="#40666e" data-background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" data-background-size="40%" data-background-position="80% 50%" data-background-opacity="0.4">
 <h1>OSS-Fuzz-Gen</h1>
@@ -560,16 +511,6 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
           width: 1px!important;
           overflow: hidden!important;
           display:block!important;
-      }</style><style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
       }</style></aside>
 </section>
 <section id="oss-fuzz-gen-3" class="slide level2">
@@ -590,16 +531,6 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <li>Provide basic guidance to the LLM, such as the need for wrapping it in LLVMFuzzerTestOneInput.</li>
 </ul>
 <style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style><style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
           clip: rect(1px, 1px, 1px, 1px);
@@ -661,7 +592,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <span id="cb3-3"><a href=""></a>              <span class="at">--model</span> gpt-4 <span class="dt">\</span></span>
 <span id="cb3-4"><a href=""></a>              <span class="at">--function</span> dateparse <span class="dt">\</span></span>
 <span id="cb3-5"><a href=""></a>              <span class="at">--target-dir</span> ../../dvhar/dateparse/ <span class="dt">\</span></span>
-<span id="cb3-6"><a href=""></a>              <span class="at">--out-dir</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href=""></a>              <span class="at">--out-dir</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="demo-time-2" class="slide level2">
 <h2>Demo Time</h2>
@@ -702,7 +633,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <span id="cb4-34"><a href=""></a></span>
 <span id="cb4-35"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb4-36"><a href=""></a><span class="op">}</span></span>
-<span id="cb4-37"><a href=""></a><span class="op">&lt;/</span>code<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-37"><a href=""></a><span class="op">&lt;/</span>code<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="demo-time-3" class="slide level2">
 <h2>Demo Time</h2>
@@ -732,7 +663,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <h2>Future work</h2>
 <h3 id="good-to-have-features">“Good to have” features</h3>
 <ol type="1">
-<li>No strict prerequisites
+<li>No strict prerequisites.
 <ul>
 <li>E.g. project structure, build system.</li>
 </ul></li>
@@ -846,16 +777,6 @@ flowchart LR
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
-'controlsAuto': true,
-'previewLinksAuto': false,
-'pdfSeparateFragments': false,
-'autoAnimateEasing': "ease",
-'autoAnimateDuration': 1,
-'autoAnimateUnmatched': true,
-'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":false},
-'smaller': false,
-
 'controlsAuto': true,
 'previewLinksAuto': false,
 'pdfSeparateFragments': false,
@@ -1035,7 +956,6 @@ flowchart LR
 
         // reveal.js plugins
         plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
-QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
 
           RevealMath,
           RevealNotes,

@@ -337,7 +337,7 @@ A GitHub action that when integrated to a C/C++ project will:
 
 ### "Good to have" features
 
-1.  No strict prerequisites
+1.  No strict prerequisites.
     -   E.g. project structure, build system.
 2.  Support for Python projects using the Atheris [@GoogleAtheris2025] fuzzer.
 
