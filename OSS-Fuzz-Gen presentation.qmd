@@ -39,7 +39,7 @@ format:
 1.  Intro to fuzzing
 2.  OSS-Fuzz
 3.  OSS-Fuzz-Gen
-    1.  `from_scatch` branch
+    1.  `from_scratch` branch
 4.  Future work
 
 # Fuzzing {background-color="#40666e"}
