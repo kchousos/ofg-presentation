@@ -24,190 +24,348 @@ embed-resources: false
 bibliography: "/home/kchou/Documents/Zotero Library/biblio.bib"
 csl: "/home/kchou/Documents/Zotero/styles/ieee.csl"
 lightbox: true
+fig-cap-location: margin
+email-obfuscation: javascript
+defaultTiming: 60
 format:
   clean-revealjs:
     menu: false
     logo: "https://feel4diabetes-study.eu/wp-content/uploads/2023/10/uoa_logo_eng-1024x271-1.png"
     theme: [default]
-    fig-caption: margin
 ---
+
 # Overview
 
-1. Intro to fuzzing
-2. OSS-Fuzz
-3. OSS-Fuzz-Gen
-	1. "From Scratch" experiment
-4. Future work
+1.  Intro to fuzzing
+2.  OSS-Fuzz
+3.  OSS-Fuzz-Gen
+    1.  `from_scatch` branch
+4.  Future work
 
 # Fuzzing {background-color="#40666e"}
 
 ## Fuzzing
 
-### What is fuzzing?
+### what is fuzzing?
 
-Fuzzing is the execution of the Program Under Test (PUT) using input(s) sampled from an input space (the "fuzz input space") that protrudes the expected input space of the PUT [@manesArtScienceEngineering2019].
+Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled from an input space (the "fuzz input space") that protrudes the expected input space of the PUT [@manesArtScienceEngineering2019].
 
-::: columns
-::: {.column width="60%"}
-- These inputs are often generated or mutated automatically.
-- Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).
-:::
+![Overview of a fuzz campaign.](https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png){width=40%}
 
-::: {.column width="40%"}
-![Overview of a fuzz campaign.](https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png){fig-align="right"}
-:::
-:::
-
-:::notes
+::: notes
 Είδος testing όπου τρέχουμε το Program Under Test (PUT) με "τυχαία" inputs. Στόχος είναι να κάνουμε το πρόγραμμα να κρασάρει, άρα να βρούμε κάποιο error.
 
-- Αρχή με corpus -> fuzz -> Αν κράσαρε: input στο corpus
-- Τα inputs γίνονται mutate
+-   Αρχή με corpus -\> fuzz -\> Αν κράσαρε: input στο corpus
+-   Τα inputs γίνονται mutate
 :::
 
-## Fuzzer implementations
+## Fuzzing
 
-- **LibFuzzer** [@LibFuzzerLibraryCoverageguided].
-	- In-process, coverage-guided, mutation-based fuzzer.
-- **Americal Fuzzy Lop** (AFL) [@AmericanFuzzyLop].
-	- Instrumented binaries for edge coverage.
-	- Adds more fuzzing strategies, better speed, and QEMU/Unicorn support.
-	- Superseded by **AFL++** [@AFLplusplus-Woot20;@heuseAFL2022].
+### what is fuzzing?
 
-## LibFuzzer
+- These inputs are often generated or mutated automatically.
+ 
+  Generational fuzzing
+  : Inputs generated randomly from a [BNF grammar](https://www.researchgate.net/publication/343973528/figure/fig2/AS:936345279135746@1600253519649/BNF-grammar-describing-the-basic-statement-syntax-of-a-binding-policy.png).
+
+  Mutational fuzzing
+  : Inputs resulted from mutating inputs from a pre-existing corpus. 
+
+- Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).
+
+## Fuzzing
+
+### Fuzzer implementations
+
+-   **LibFuzzer** [@LibFuzzerLibraryCoverageguided].
+    -   In-process, coverage-guided, mutation-based fuzzer.
+-   **Americal Fuzzy Lop** (AFL) [@AmericanFuzzyLop].
+    -   Instrumented binaries for edge coverage.
+    -   Adds more fuzzing strategies, better speed, and QEMU/Unicorn support.
+    -   Superseded by **AFL++** [@heuseAFL2022].
+
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
+
+> LibFuzzer is an in-process, coverage-guided, evolutionary fuzzing engine. LibFuzzer is linked with the library under test, and feeds fuzzed inputs to the library via a specific fuzzing entrypoint (fuzz target).
 
 Used to fuzz library functions. The programmer writes a *fuzz target* to test their implementation.
 
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
+
 ::: {.callout-note title="Fuzz target"}
 A function that accepts an array of bytes and does something interesting with these bytes using the API under test [@LibFuzzerLibraryCoverageguided].
+
+A.K.A. fuzz driver, fuzzer entry point, harness.
 :::
 
-## LibFuzzer
-### Fuzz target structure 
+## LibFuzzer {background-image="https://llvm.org/docs/_static/logo.png" background-size=20% background-position="90% 90%" background-opacity="0.4" }
 
-- Entry point called repeatedly with mutated inputs.
-- Feedback-driven: uses coverage to guide mutations.
-- Best for libraries, not full programs.
+### Fuzz target structure
 
-```{.c code-line-numbers="|1|2"}
+-   Entry point called repeatedly with mutated inputs.
+-   Feedback-driven: uses coverage to guide mutations.
+-   Best for libraries, not full programs.
+
+``` {.c code-line-numbers="|1|2"}
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   DoSomethingWithData(Data, Size);
   return 0;
 }
 ```
 
-:::notes
+::: notes
 Τέτοιο signature χρειάζεται το libfuzzer που φτιάχνει δικό του binary. Το AFL++ τρέχει το original binary.
 
 **Πρόσεχε, τα lines έχουν highlight**
 :::
 
-## AFL++
+## AFL++ {background-image="https://avatars.githubusercontent.com/u/62360046?v=4" background-size=10% background-position="90% 90%" background-opacity="0.4" }
 
 AFL fuzzes programs/binaries. The inputs are taken from the `seeds_dir` and their mutations.
 
-```{.bash}
+``` bash
 $ ./afl-fuzz -i seeds_dir -o output_dir -- /path/to/tested/program
 ```
 
-- Works on black-box or instrumented binaries.
-- Uses fork-server model for speed.
-- Supports persistent mode, QEMU, and Unicorn modes.
+-   Works on black-box or instrumented binaries.
+-   Uses fork-server model for speed.
+-   Supports persistent mode, QEMU, and Unicorn modes.
 
-# OSS-Fuzz {background-color="#40666e"}
+::: notes
+Μπορεί επίσης να χρησιμοποιηθεί για fuzzing βιβλιοθηκών κτλ., απλά αντί για `LLVMFuzzerTestOneInput` έχουμε την `main`.
 
-## Fuzz-Introspector
+Μπορεί να χρησιμοποιήσει και `LLVMFuzzerTestOneInput` harnesses.
+:::
 
-Fuzz Introspector is an LLVM-based program analysis tool that extracts a lot of data useful for fuzz introspection and also program analysis in general. For example, for each function in the target project Fuzz Introspector provides data such as function signature, cross-reference information, source code, cyclomatic complexity, call tree and more. This is all useful for our LLM-based harness generation since the goal is to present the LLM with a prompt that gives a precise technical description of the target under analysis.The output of this step is an introspector report for each build script.
+# OSS-Fuzz {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size=40% background-position="80% 50%" background-opacity="0.4" }
 
-# OSS-Fuzz-Gen {background-color="#40666e"}
+## OSS-Fuzz
+
+### Continuous fuzzing for open source software
+
+Scalable, distributed, CI fuzzing solution for open-source projects [@aryaOSSFuzz2025].
+
+- Supports *LibFuzzer*, *AFL++*, *Honggfuzz* and *Centipede* fuzzing engines.
+- Supports C/C++, Rust, Go, Python and Java/JVM projects.
+- Based on ClusterFuzz [@GoogleClusterfuzz2025].
+- Started in 2016, in response to the Heartbleed vulnerability [@HeartbleedBug].
+
+> The vulnerability had the potential to affect almost every internet user, yet was caused by a relatively simple memory buffer overflow bug that could have been detected by fuzzing [@OSSFuzzDocumentation].
+
+## OSS-Fuzz
+
+![](https://github.com/google/oss-fuzz/raw/master/docs/images/process.png){fig-align="center"}
+
+## OSS-Fuzz
+
+### Problems
+
+- Upfront cost of writing fuzz targets.
+- Integration specifications[^1]:
+	- project.yaml
+	- Dockerfile
+	- build.sh
+- Required Google developer account.
+
+[^1]: Must transform project to ClusterFuzz's [@GoogleClusterfuzz2025] structure.
+
+:::notes
+Χρειάζεται ο προγραμματιστής να γράψει τα fuzz targets και να σετάρει το project για integration με το OSS-Fuzz.
+
+Google account to access to the ClusterFuzz web interface.
+:::
+
+# OSS-Fuzz-Gen {background-color="#40666e" background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" background-size=40% background-position="80% 50%" background-opacity="0.4" }
 
 ## OSS-Fuzz-Gen
 
-[@Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024]
+> This framework generates fuzz targets for real-world C/C++, Java, Python projects with various Large Language Models (LLM) and benchmarks them via the OSS-Fuzz platform [@Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024].
 
-The primary goal of our efforts are to take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness. In this blog post we will describe how we automatically build projects, how we generate fuzzing harnesses using LLMs, how these are evaluated and list a selection of 15 projects that we generated OSS-Fuzz/ClusterFuzzLite integrations for and have upstreamed the results.
+- Goal: Take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness [@oss-fuzzmaintainersIntroducingLLMbasedHarness2024].
 
-![](https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png)
-![](https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png)
+![](https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png){fig-align='center'}
 
+## OSS-Fuzz-Gen
+
+### Architecture
+
+![](https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png){fig-align='center'}
+
+::: {.fragment}
+:::{.callout-warning}
+The project must come with preexisting fuzz targets. [Fuzz-Introspector](https://github.com/ossf/fuzz-introspector) gives the LLM info about the **harnesses**, not the main program/functions.
+:::
+:::
+
+::: notes
 Δεδομένου ενός github repo link, γίνονται τα ακόλουθα:
 
-1. Το σύστημα προσπαθεί να κάνει compile το project με βάση κάποια predefined generic scripts κι άλλα "build heuristics"
-2. Εφόσον γίνεται succesfully built, ξαναγίνεται compiled αλλά χρησιμοποιώντας το [Fuzz Introspector](https://github.com/ossf/fuzz-introspector) για program analysis του project. Το τελευταίο παράγει ένα json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.
-3. Το report του παραπάνω χρησιμοποιείται σε ένα prompt που δίνεται στο LLM για να παράξει harness για κάποια συγκεκριμένη συνάρτηση ([εδώ παραδείγματα](https://gist.github.com/DavidKorczynski/bc386b88eab43931338971cff4d4655b)).
-	- [?] Πώς δημιουργούνται αυτά τα prompts; Κατά πόσο διαφέρουν μεταξύ τους για διαφορετικές συναρτήσεις; Ή είναι ένα template που όπου αλλάζουν μόνο τα ονόματα των συναρτήσεων κτλ.; 
-4. Κάθε harness τεστάρετε για το αν δουλεύει και δεν κρασάρει κατευθείαν. Μετά γίνονται integrated σε OSS-Fuzz/ClusterFuzzLite projects.
+1.  compile το project με βάση κάποια predefined generic scripts κι άλλα "build heuristics"
+2.  ξανά compile με Fuzz Introspector για program analysis -> json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.
+3.  το report χρησιμοποιείται σε ένα prompt που δίνεται στο LLM για να παράξει harness για κάποια συγκεκριμένη συνάρτηση.
+4.  Κάθε harness τεστάρετε για το αν δουλεύει και δεν κρασάρει κατευθείαν. Μετά γίνονται integrated σε OSS-Fuzz/ClusterFuzzLite projects.
+:::
 
-- [!] Το εκάστοστε project πρέπει ήδη να έχει fuzz targets. Το fuzz introspector παράγει reports για υπάρχοντα harnesses και το LLM τα τροποποιεί.
+## OSS-Fuzz-Gen
 
-![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png)
+### LLM Prompting
 
-For each successfully built harness we run the given harness for a set period of time (40 seconds) in order to collect runtime logs, and for each successfully built harness we wrap the relevant artifacts in an OSS-Fuzz project as well as CluserFuzzLite project that can be run directly using the OSS-Fuzz infrastructure.
+1. Input: Fuzz-Introspector `json` code reports.
+2. Include the above in prompt templates → send to LLM.
+3. Result: Harness returned from LLM.
 
-## LLM Prompting
+::: notes
+we have implemented several “harness-generators” that take as input the introspector reports and use this to create human-readable (LLM-readable) prompts which direct the LLM towards creating fuzz harnesses. The high-level idea is to generate textual descriptions of the target functions that are likely to produce a good harness by the LLM.
 
-The next step is to use LLMs to generate fuzzing harnesses. To do this, we have implemented several “harness-generators” that take as input the introspector reports and use this to create human-readable (LLM-readable) prompts which direct the LLM towards creating fuzz harnesses. The high-level idea is to generate textual descriptions of the target functions that are likely to produce a good harness by the LLM.
+-   Description of the target function’s signature, with complete types, of the target program
+-   Description of specifically which header files are available in the target project.
+-   Examples of cross-references that use the target function to present sample code patterns involving the target function.
+-   The actual source code of the target function.
+-   Provide basic guidance to the LLM, such as the need for wrapping it in LLVMFuzzerTestOneInput.
+:::
 
-- Description of the target function’s signature, with complete types, of the target program
-- Description of specifically which header files are available in the target project.
-- Examples of cross-references that use the target function to present sample code patterns involving the target function.
-- The actual source code of the target function.
-- Provide basic guidance to the LLM, such as the need for wrapping it in LLVMFuzzerTestOneInput.
+## OSS-Fuzz-Gen
 
-# Results
+### Results
 
-```c
-// ...includes...
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png){fig-align='center' .stretch .lightbox}
 
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+> One of our sample projects, `tinyxml2`, went from 38% line coverage to 69% without any interventions from our team.
 
-	// Ensure null-terminated string
-	char* data_copy = (char*)malloc(size + 1);
-	memcpy(data_copy, data, size);
-	data_copy[size] = '\0';
-	
-	// Dummy arguments
-	const char* dummy_filename = "dummy.svg";
-	float dummy_value = 1.0f;
-	
-	// Call the target function
-	NSVGimage* result = nsvgParse( data_copy, dummy_filename, dummy_value );
-	
-	// Free memory
-	if (result) {
-		nsvgDelete(result);
-	}
-	free(data_copy);
-	return 0;
-}
-```
+## OSS-Fuzz-Gen
 
-# Experimental "fromScratch" {background-color="#40666e"}
+### Problems
+
+- Project needs to be part of OSS-Fuzz to use OSS-Fuzz-Gen's capabilities.
+	- Same hinderances as OSS-Fuzz.
+
+# `from_scratch` Branch {background-color="#40666e"}
+
+## `from_scratch` Branch
+
+Future plans for OSS-Fuzz-Gen include bootstrapping a project fuzz-wise, meaning generating harnesses for a codebase without harnesses.
+
+The work for this feature is located in <https://github.com/google/oss-fuzz-gen/blob/main/experimental/from_scratch>. The latest commits do not work. Known working commit: `171aac2`.
 
 # Demo Time {background-color="#40666e"}
 
-## Results
+## Demo Time
 
-# Personal Plan {background-color="#40666e"}
+1. Clone and install Fuzz-Introspector.
+2. Clone and setup OSS-Fuzz-Gen.
+	1. Checkout working commit: `$ git checkout 171aac2`{.bash}.
+	2. Export API key.
+3. Prepare a target project.
+   [README](https://github.com/google/oss-fuzz-gen/tree/main/experimental/from_scratch#readme) uses [dvhar/dateparse](https://github.com/dvhar/dateparse).
+4. Execute the script:
+  ```bash
+  ❯ python3 -m experimental.from_scratch.generate \
+                --language c++ \
+                --model gpt-4 \
+                --function dateparse \
+                --target-dir ../../dvhar/dateparse/ \
+                --out-dir out
+  ```
 
-## Personal Plan
+## Demo Time
+
+### Result
+
+```c
+// out/01.rawoutput
+<code>
+#include <stdint.h>
+#include <stddef.h>
+
+typedef struct {
+	int sec;     /* seconds after the minute - [ 0 to 59 ] */
+	int min;     /* minutes after the hour - [ 0 to 59 ] */
+	int hour;    /* hours since midnight - [ 0 to 23] */
+	int mday;    /* day of the month - [ 1 to 31 ] */
+	int mon;     /* months since January - [ 0 to 11 ] */
+	int year;    /* years */
+	int wday;    /* days since Sunday - [ 0 to 6 ] */
+	int yday;    /* days since January 1 - [ 0 to 365 ] */
+} date_t;
+
+extern int dateparse(const char* datestr, date_t* t, int *offset, int stringlen);
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+	// Ignore input if it is less than 1
+	if (size < 1) {
+		return 0;
+	}
+
+	// Convert data to string
+	char *datestr = (char *)data;
+
+	// Initialize a date_t struct and an offset integer
+	date_t t;
+	int offset = 0;
+
+	// Call the function-under-test
+	dateparse(datestr, &t, &offset, (int)size);
+
+	return 0;
+}
+</code>
+```
+
+## Demo Time
+
+### Problems
+
+1. Response wrapped in `<code>` tags.
+2. Even without them, harness does not compile.
+3. Missing headers.
+
+
+# Where do we go from here? {background-color="#40666e"}
+
+## Future work
+
+### High-level goal
+
+A GitHub action that when integrated to a C/C++ project will:
+
+1. Use LLMs to create fuzz targets from scratch.
+2. Build and run them, evaluate them based on runtime, coverage etc.
+3. Create PRs to integrate them to the project.
+
+## Future work
+
+### "Good to have" features
+
+1. No strict prerequisites
+	- E.g. project structure, build system.
+2. Support for Python projects using the Atheris [@GoogleAtheris2025] fuzzer.
+
+## Future work
+
+### Flowchart
 
 ```{mermaid}
 %%| fig-align: center
-sequenceDiagram
-    Alice->>+John: Hello John, how are you?
-    Alice->>+John: John, can you hear me?
-    John-->>-Alice: Hi Alice, I can hear you!
-    John-->>-Alice: I feel great!
+%%{ init: { "flowchart": { "nodeSpacing": 30, "rankSpacing": 30 } } }%%
+flowchart LR
+    n1(["Start"]) --> n2["Add action"]
+    n2 --> n8["Project info"]
+    n3["LLM"] --> n4[/"Gen harnesses"/]
+    n4 --> n5{"Pass?"}
+    n5 -- False --> n3
+    n5 -- True --> n6["PR"]
+    n6 --> n7(["End"])
+    n8 --> n3
 ```
 
-# References
+## References
 
-::: {#refs}
+::: {#refs .smaller}
 :::
 
-These slides can be found at: <https://kchousos.github.io/ofg-presentation>
+## {.center}
+
+These slides can be found at: <https://kchousos.github.io/ofg-presentation/>
 
 # Thank you!
 

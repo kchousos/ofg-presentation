@@ -6,7 +6,7 @@
 <script src="OSS-Fuzz-Gen presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/quarto-syntax-highlighting-7b4406b7675125bc2ba204020e191172.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="OSS-Fuzz-Gen presentation_files/libs/quarto-html/quarto-syntax-highlighting-f857f066592719f7e45e1c552765fa0b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="OSS-Fuzz-Gen presentation_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
@@ -246,7 +246,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <li>OSS-Fuzz</li>
 <li>OSS-Fuzz-Gen
 <ol type="1">
-<li>“From Scratch” experiment</li>
+<li><code>from_scatch</code> branch</li>
 </ol></li>
 <li>Future work</li>
 </ol>
@@ -259,26 +259,14 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 </section>
 <section id="fuzzing-1" class="slide level2">
 <h2>Fuzzing</h2>
-<h3 id="what-is-fuzzing">What is fuzzing?</h3>
-<p>Fuzzing is the execution of the Program Under Test (PUT) using input(s) sampled from an input space (the “fuzz input space”) that protrudes the expected input space of the PUT <span class="citation" data-cites="manesArtScienceEngineering2019"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span>.</p>
-<div class="columns">
-<div class="column" style="width:60%;">
-<ul>
-<li>These inputs are often generated or mutated automatically.</li>
-<li>Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).</li>
-</ul>
-</div><div class="column" style="width:40%;">
-<div class="quarto-figure quarto-figure-right">
+<h3 id="what-is-fuzzing">what is fuzzing?</h3>
+<p>Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled from an input space (the “fuzz input space”) that protrudes the expected input space of the PUT <span class="citation" data-cites="manesArtScienceEngineering2019"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span>.</p>
+<div class="quarto-figure quarto-figure-center margin-caption">
 <figure>
-<div class="quarto-figure quarto-figure-right">
-<figure>
-<p><a href="https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Overview of a fuzz campaign."><img data-src="https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png" class="quarto-figure quarto-figure-right" alt="Overview of a fuzz campaign."></a></p>
-</figure>
-</div>
+<p><a href="https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Overview of a fuzz campaign."><img data-src="https://fuchsia.dev/static/docs/images/fuzzing/coverage-guided.png" style="width:40.0%" alt="Overview of a fuzz campaign."></a></p>
 <figcaption>Overview of a fuzz campaign.</figcaption>
 </figure>
 </div>
-</div></div>
 <aside class="notes">
 <p>Είδος testing όπου τρέχουμε το Program Under Test (PUT) με “τυχαία” inputs. Στόχος είναι να κάνουμε το πρόγραμμα να κρασάρει, άρα να βρούμε κάποιο error.</p>
 <ul>
@@ -297,8 +285,27 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
           display:block!important;
       }</style></aside>
 </section>
-<section id="fuzzer-implementations" class="slide level2">
-<h2>Fuzzer implementations</h2>
+<section id="fuzzing-2" class="slide level2">
+<h2>Fuzzing</h2>
+<h3 id="what-is-fuzzing-1">what is fuzzing?</h3>
+<ul>
+<li><p>These inputs are often generated or mutated automatically.</p>
+<dl>
+<dt>Generational fuzzing</dt>
+<dd>
+Inputs generated randomly from a <a href="https://www.researchgate.net/publication/343973528/figure/fig2/AS:936345279135746@1600253519649/BNF-grammar-describing-the-basic-statement-syntax-of-a-binding-policy.png">BNF grammar</a>.
+</dd>
+<dt>Mutational fuzzing</dt>
+<dd>
+Inputs resulted from mutating inputs from a pre-existing corpus.
+</dd>
+</dl></li>
+<li><p>Goal: trigger unexpected behavior (e.g., crashes, hangs, memory errors).</p></li>
+</ul>
+</section>
+<section id="fuzzing-3" class="slide level2">
+<h2>Fuzzing</h2>
+<h3 id="fuzzer-implementations">Fuzzer implementations</h3>
 <ul>
 <li><strong>LibFuzzer</strong> <span class="citation" data-cites="LibFuzzerLibraryCoverageguided"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span>.
 <ul>
@@ -308,13 +315,19 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <ul>
 <li>Instrumented binaries for edge coverage.</li>
 <li>Adds more fuzzing strategies, better speed, and QEMU/Unicorn support.</li>
-<li>Superseded by <strong>AFL++</strong> <span class="citation" data-cites="AFLplusplus-Woot20 heuseAFL2022"><a href="#/references" role="doc-biblioref" onclick="">[4]</a>, <a href="#/references" role="doc-biblioref" onclick="">[5]</a></span>.</li>
+<li>Superseded by <strong>AFL++</strong> <span class="citation" data-cites="heuseAFL2022"><a href="#/references" role="doc-biblioref" onclick="">[4]</a></span>.</li>
 </ul></li>
 </ul>
 </section>
-<section id="libfuzzer" class="slide level2">
+<section id="libfuzzer" class="slide level2" data-background-image="https://llvm.org/docs/_static/logo.png" data-background-size="20%" data-background-position="90% 90%" data-background-opacity="0.4">
 <h2>LibFuzzer</h2>
+<blockquote>
+<p>LibFuzzer is an in-process, coverage-guided, evolutionary fuzzing engine. LibFuzzer is linked with the library under test, and feeds fuzzed inputs to the library via a specific fuzzing entrypoint (fuzz target).</p>
+</blockquote>
 <p>Used to fuzz library functions. The programmer writes a <em>fuzz target</em> to test their implementation.</p>
+</section>
+<section id="libfuzzer-1" class="slide level2" data-background-image="https://llvm.org/docs/_static/logo.png" data-background-size="20%" data-background-position="90% 90%" data-background-opacity="0.4">
+<h2>LibFuzzer</h2>
 <div title="Fuzz target">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -326,12 +339,13 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 </div>
 <div class="callout-content">
 <p>A function that accepts an array of bytes and does something interesting with these bytes using the API under test <span class="citation" data-cites="LibFuzzerLibraryCoverageguided"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span>.</p>
+<p>A.K.A. fuzz driver, fuzzer entry point, harness.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="libfuzzer-1" class="slide level2">
+<section id="libfuzzer-2" class="slide level2" data-background-image="https://llvm.org/docs/_static/logo.png" data-background-size="20%" data-background-position="90% 90%" data-background-opacity="0.4">
 <h2>LibFuzzer</h2>
 <h3 id="fuzz-target-structure">Fuzz target structure</h3>
 <ul>
@@ -358,7 +372,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
           display:block!important;
       }</style></aside>
 </section>
-<section id="afl" class="slide level2">
+<section id="afl" class="slide level2" data-background-image="https://avatars.githubusercontent.com/u/62360046?v=4" data-background-size="10%" data-background-position="90% 90%" data-background-opacity="0.4">
 <h2>AFL++</h2>
 <p>AFL fuzzes programs/binaries. The inputs are taken from the <code>seeds_dir</code> and their mutations.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href=""></a><span class="ex">$</span> ./afl-fuzz <span class="at">-i</span> seeds_dir <span class="at">-o</span> output_dir <span class="at">--</span> /path/to/tested/program</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -367,45 +381,148 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <li>Uses fork-server model for speed.</li>
 <li>Supports persistent mode, QEMU, and Unicorn modes.</li>
 </ul>
+<aside class="notes">
+<p>Μπορεί επίσης να χρησιμοποιηθεί για fuzzing βιβλιοθηκών κτλ., απλά αντί για <code>LLVMFuzzerTestOneInput</code> έχουμε την <code>main</code>.</p>
+<p>Μπορεί να χρησιμοποιήσει και <code>LLVMFuzzerTestOneInput</code> harnesses.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section></section>
 <section>
-<section id="oss-fuzz" class="title-slide slide level1 center" data-background-color="#40666e">
+<section id="oss-fuzz" class="title-slide slide level1 center" data-background-color="#40666e" data-background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" data-background-size="40%" data-background-position="80% 50%" data-background-opacity="0.4">
 <h1>OSS-Fuzz</h1>
 
 </section>
-<section id="fuzz-introspector" class="slide level2">
-<h2>Fuzz-Introspector</h2>
-<p>Fuzz Introspector is an LLVM-based program analysis tool that extracts a lot of data useful for fuzz introspection and also program analysis in general. For example, for each function in the target project Fuzz Introspector provides data such as function signature, cross-reference information, source code, cyclomatic complexity, call tree and more. This is all useful for our LLM-based harness generation since the goal is to present the LLM with a prompt that gives a precise technical description of the target under analysis.The output of this step is an introspector report for each build script.</p>
-</section></section>
+<section id="oss-fuzz-1" class="slide level2">
+<h2>OSS-Fuzz</h2>
+<h3 id="continuous-fuzzing-for-open-source-software">Continuous fuzzing for open source software</h3>
+<p>Scalable, distributed, CI fuzzing solution for open-source projects <span class="citation" data-cites="aryaOSSFuzz2025"><a href="#/references" role="doc-biblioref" onclick="">[5]</a></span>.</p>
+<ul>
+<li>Supports <em>LibFuzzer</em>, <em>AFL++</em>, <em>Honggfuzz</em> and <em>Centipede</em> fuzzing engines.</li>
+<li>Supports C/C++, Rust, Go, Python and Java/JVM projects.</li>
+<li>Based on ClusterFuzz <span class="citation" data-cites="GoogleClusterfuzz2025"><a href="#/references" role="doc-biblioref" onclick="">[6]</a></span>.</li>
+<li>Started in 2016, in response to the Heartbleed vulnerability <span class="citation" data-cites="HeartbleedBug"><a href="#/references" role="doc-biblioref" onclick="">[7]</a></span>.</li>
+</ul>
+<blockquote>
+<p>The vulnerability had the potential to affect almost every internet user, yet was caused by a relatively simple memory buffer overflow bug that could have been detected by fuzzing <span class="citation" data-cites="OSSFuzzDocumentation"><a href="#/references" role="doc-biblioref" onclick="">[8]</a></span>.</p>
+</blockquote>
+</section>
+<section id="oss-fuzz-2" class="slide level2">
+<h2>OSS-Fuzz</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="https://github.com/google/oss-fuzz/raw/master/docs/images/process.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://github.com/google/oss-fuzz/raw/master/docs/images/process.png" class="quarto-figure quarto-figure-center"></a></p>
+</figure>
+</div>
+</section>
+<section id="oss-fuzz-3" class="slide level2">
+<h2>OSS-Fuzz</h2>
+<h3 id="problems">Problems</h3>
+<ul>
+<li>Upfront cost of writing fuzz targets.</li>
+<li>Integration specifications<sup>1</sup>:
+<ul>
+<li>project.yaml</li>
+<li>Dockerfile</li>
+<li>build.sh</li>
+</ul></li>
+<li>Required Google developer account.</li>
+</ul>
+<aside class="notes">
+<p>Χρειάζεται ο προγραμματιστής να γράψει τα fuzz targets και να σετάρει το project για integration με το OSS-Fuzz.</p>
+<p>Google account to access to the ClusterFuzz web interface.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Must transform project to ClusterFuzz’s <span class="citation" data-cites="GoogleClusterfuzz2025"><a href="#/references" role="doc-biblioref" onclick="">[6]</a></span> structure.</p></li></ol></aside></section></section>
 <section>
-<section id="oss-fuzz-gen" class="title-slide slide level1 center" data-background-color="#40666e">
+<section id="oss-fuzz-gen" class="title-slide slide level1 center" data-background-color="#40666e" data-background-image="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" data-background-size="40%" data-background-position="80% 50%" data-background-opacity="0.4">
 <h1>OSS-Fuzz-Gen</h1>
 
 </section>
 <section id="oss-fuzz-gen-1" class="slide level2">
 <h2>OSS-Fuzz-Gen</h2>
-<p><span class="citation" data-cites="Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024"><a href="#/references" role="doc-biblioref" onclick="">[6]</a></span></p>
-<p>The primary goal of our efforts are to take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness. In this blog post we will describe how we automatically build projects, how we generate fuzzing harnesses using LLMs, how these are evaluated and list a selection of 15 projects that we generated OSS-Fuzz/ClusterFuzzLite integrations for and have upstreamed the results.</p>
-<p><img data-src="https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png"> <img data-src="https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png"></p>
+<blockquote>
+<p>This framework generates fuzz targets for real-world C/C++, Java, Python projects with various Large Language Models (LLM) and benchmarks them via the OSS-Fuzz platform <span class="citation" data-cites="Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024"><a href="#/references" role="doc-biblioref" onclick="">[9]</a></span>.</p>
+</blockquote>
+<ul>
+<li>Goal: Take as input a GitHub repository and output an OSS-Fuzz project as well as a ClusterFuzzLite project with a meaningful fuzz harness <span class="citation" data-cites="oss-fuzzmaintainersIntroducingLLMbasedHarness2024"><a href="#/references" role="doc-biblioref" onclick="">[10]</a></span>.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="https://github.com/google/oss-fuzz-gen/raw/main/images/Overview.png" class="quarto-figure quarto-figure-center"></a></p>
+</figure>
+</div>
+</section>
+<section id="oss-fuzz-gen-2" class="slide level2">
+<h2>OSS-Fuzz-Gen</h2>
+<h3 id="architecture">Architecture</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="https://blog.oss-fuzz.com/images/llm-from-scratch-overview.png" class="quarto-figure quarto-figure-center"></a></p>
+</figure>
+</div>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>The project must come with preexisting fuzz targets. <a href="https://github.com/ossf/fuzz-introspector">Fuzz-Introspector</a> gives the LLM info about the <strong>harnesses</strong>, not the main program/functions.</p>
+</div>
+</div>
+</div>
+</div>
+<aside class="notes">
 <p>Δεδομένου ενός github repo link, γίνονται τα ακόλουθα:</p>
 <ol type="1">
-<li>Το σύστημα προσπαθεί να κάνει compile το project με βάση κάποια predefined generic scripts κι άλλα “build heuristics”</li>
-<li>Εφόσον γίνεται succesfully built, ξαναγίνεται compiled αλλά χρησιμοποιώντας το <a href="https://github.com/ossf/fuzz-introspector">Fuzz Introspector</a> για program analysis του project. Το τελευταίο παράγει ένα json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.</li>
-<li>Το report του παραπάνω χρησιμοποιείται σε ένα prompt που δίνεται στο LLM για να παράξει harness για κάποια συγκεκριμένη συνάρτηση (<a href="https://gist.github.com/DavidKorczynski/bc386b88eab43931338971cff4d4655b">εδώ παραδείγματα</a>).
-<ul>
-<li>[?] Πώς δημιουργούνται αυτά τα prompts; Κατά πόσο διαφέρουν μεταξύ τους για διαφορετικές συναρτήσεις; Ή είναι ένα template που όπου αλλάζουν μόνο τα ονόματα των συναρτήσεων κτλ.;</li>
-</ul></li>
+<li>compile το project με βάση κάποια predefined generic scripts κι άλλα “build heuristics”</li>
+<li>ξανά compile με Fuzz Introspector για program analysis -&gt; json report file με στατιστικά για κάθε συνάρτηση, καθώς πληροφορίες για το signature, τα ορίσματα κτλ.</li>
+<li>το report χρησιμοποιείται σε ένα prompt που δίνεται στο LLM για να παράξει harness για κάποια συγκεκριμένη συνάρτηση.</li>
 <li>Κάθε harness τεστάρετε για το αν δουλεύει και δεν κρασάρει κατευθείαν. Μετά γίνονται integrated σε OSS-Fuzz/ClusterFuzzLite projects.</li>
 </ol>
-<ul>
-<li>[!] Το εκάστοστε project πρέπει ήδη να έχει fuzz targets. Το fuzz introspector παράγει reports για υπάρχοντα harnesses και το LLM τα τροποποιεί.</li>
-</ul>
-<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png"></a></p>
-<p>For each successfully built harness we run the given harness for a set period of time (40 seconds) in order to collect runtime logs, and for each successfully built harness we wrap the relevant artifacts in an OSS-Fuzz project as well as CluserFuzzLite project that can be run directly using the OSS-Fuzz infrastructure.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="llm-prompting" class="slide level2">
-<h2>LLM Prompting</h2>
-<p>The next step is to use LLMs to generate fuzzing harnesses. To do this, we have implemented several “harness-generators” that take as input the introspector reports and use this to create human-readable (LLM-readable) prompts which direct the LLM towards creating fuzz harnesses. The high-level idea is to generate textual descriptions of the target functions that are likely to produce a good harness by the LLM.</p>
+<section id="oss-fuzz-gen-3" class="slide level2">
+<h2>OSS-Fuzz-Gen</h2>
+<h3 id="llm-prompting">LLM Prompting</h3>
+<ol type="1">
+<li>Input: Fuzz-Introspector <code>json</code> code reports.</li>
+<li>Include the above in prompt templates → send to LLM.</li>
+<li>Result: Harness returned from LLM.</li>
+</ol>
+<aside class="notes">
+<p>we have implemented several “harness-generators” that take as input the introspector reports and use this to create human-readable (LLM-readable) prompts which direct the LLM towards creating fuzz harnesses. The high-level idea is to generate textual descriptions of the target functions that are likely to produce a good harness by the LLM.</p>
 <ul>
 <li>Description of the target function’s signature, with complete types, of the target program</li>
 <li>Description of specifically which header files are available in the target project.</li>
@@ -413,74 +530,174 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <li>The actual source code of the target function.</li>
 <li>Provide basic guidance to the LLM, such as the need for wrapping it in LLVMFuzzerTestOneInput.</li>
 </ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="oss-fuzz-gen-4" class="slide level2">
+<h2>OSS-Fuzz-Gen</h2>
+<h3 id="results">Results</h3>
+
+<img data-src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitk8jEW_JFpjvP_X4xeIZ50ByXSos6du87K-a1yL8Ubv4Bj69vZ1dstvfeV6dOYGzN1k095Z1pI_UM7ZHHoBx7ClIfmEBeVaxs9_8fzr4QTu-oeOjsIkyxn4JPohJc3QCGuH_wN5F5xeE7_Ww2z8Drt8VNDnS9rzUoT-c3qucnEJfNGozyHgrWeyYrN4GS/w610-h460/Screenshot%202023-08-15%20at%208.02.16%20PM.png" class="stretch quarto-figure quarto-figure-center"><blockquote>
+<p>One of our sample projects, <code>tinyxml2</code>, went from 38% line coverage to 69% without any interventions from our team.</p>
+</blockquote>
+</section>
+<section id="oss-fuzz-gen-5" class="slide level2">
+<h2>OSS-Fuzz-Gen</h2>
+<h3 id="problems-1">Problems</h3>
+<ul>
+<li>Project needs to be part of OSS-Fuzz to use OSS-Fuzz-Gen’s capabilities.
+<ul>
+<li>Same hinderances as OSS-Fuzz.</li>
+</ul></li>
+</ul>
 </section></section>
-<section id="results" class="title-slide slide level1 center">
-<h1>Results</h1>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href=""></a><span class="co">// ...includes...</span></span>
-<span id="cb3-2"><a href=""></a></span>
-<span id="cb3-3"><a href=""></a><span class="dt">int</span> LLVMFuzzerTestOneInput<span class="op">(</span><span class="dt">const</span> <span class="dt">uint8_t</span> <span class="op">*</span>data<span class="op">,</span> <span class="dt">size_t</span> size<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-4"><a href=""></a></span>
-<span id="cb3-5"><a href=""></a>    <span class="co">// Ensure null-terminated string</span></span>
-<span id="cb3-6"><a href=""></a>    <span class="dt">char</span><span class="op">*</span> data_copy <span class="op">=</span> <span class="op">(</span><span class="dt">char</span><span class="op">*)</span>malloc<span class="op">(</span>size <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
-<span id="cb3-7"><a href=""></a>    memcpy<span class="op">(</span>data_copy<span class="op">,</span> data<span class="op">,</span> size<span class="op">);</span></span>
-<span id="cb3-8"><a href=""></a>    data_copy<span class="op">[</span>size<span class="op">]</span> <span class="op">=</span> <span class="ch">'</span><span class="sc">\0</span><span class="ch">'</span><span class="op">;</span></span>
-<span id="cb3-9"><a href=""></a>    </span>
-<span id="cb3-10"><a href=""></a>    <span class="co">// Dummy arguments</span></span>
-<span id="cb3-11"><a href=""></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> dummy_filename <span class="op">=</span> <span class="st">"dummy.svg"</span><span class="op">;</span></span>
-<span id="cb3-12"><a href=""></a>    <span class="dt">float</span> dummy_value <span class="op">=</span> <span class="fl">1.0</span><span class="bu">f</span><span class="op">;</span></span>
-<span id="cb3-13"><a href=""></a>    </span>
-<span id="cb3-14"><a href=""></a>    <span class="co">// Call the target function</span></span>
-<span id="cb3-15"><a href=""></a>    NSVGimage<span class="op">*</span> result <span class="op">=</span> nsvgParse<span class="op">(</span> data_copy<span class="op">,</span> dummy_filename<span class="op">,</span> dummy_value <span class="op">);</span></span>
-<span id="cb3-16"><a href=""></a>    </span>
-<span id="cb3-17"><a href=""></a>    <span class="co">// Free memory</span></span>
-<span id="cb3-18"><a href=""></a>    <span class="cf">if</span> <span class="op">(</span>result<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-19"><a href=""></a>        nsvgDelete<span class="op">(</span>result<span class="op">);</span></span>
-<span id="cb3-20"><a href=""></a>    <span class="op">}</span></span>
-<span id="cb3-21"><a href=""></a>    free<span class="op">(</span>data_copy<span class="op">);</span></span>
-<span id="cb3-22"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb3-23"><a href=""></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-
-<section id="experimental-fromscratch" class="title-slide slide level1 center" data-background-color="#40666e">
-<h1>Experimental “fromScratch”</h1>
+<section>
+<section id="from_scratch-branch" class="title-slide slide level1 center" data-background-color="#40666e">
+<h1><code>from_scratch</code> Branch</h1>
 
 </section>
-
+<section id="from_scratch-branch-1" class="slide level2">
+<h2><code>from_scratch</code> Branch</h2>
+<p>Future plans for OSS-Fuzz-Gen include bootstrapping a project fuzz-wise, meaning generating harnesses for a codebase without harnesses.</p>
+<p>The work for this feature is located in <a href="https://github.com/google/oss-fuzz-gen/blob/main/experimental/from_scratch" class="uri">https://github.com/google/oss-fuzz-gen/blob/main/experimental/from_scratch</a>. The latest commits do not work. Known working commit: <code>171aac2</code>.</p>
+</section></section>
 <section>
 <section id="demo-time" class="title-slide slide level1 center" data-background-color="#40666e">
 <h1>Demo Time</h1>
 
 </section>
-<section id="results-1" class="slide level2">
-<h2>Results</h2>
+<section id="demo-time-1" class="slide level2">
+<h2>Demo Time</h2>
+<ol type="1">
+<li>Clone and install Fuzz-Introspector.</li>
+<li>Clone and setup OSS-Fuzz-Gen.
+<ol type="1">
+<li>Checkout working commit: <code class="sourceCode bash"><span class="ex">$</span> git checkout 171aac2</code>.</li>
+<li>Export API key.</li>
+</ol></li>
+<li>Prepare a target project. <a href="https://github.com/google/oss-fuzz-gen/tree/main/experimental/from_scratch#readme">README</a> uses <a href="https://github.com/dvhar/dateparse">dvhar/dateparse</a>.</li>
+<li>Execute the script:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href=""></a><span class="ex">❯</span> python3 <span class="at">-m</span> experimental.from_scratch.generate <span class="dt">\</span></span>
+<span id="cb3-2"><a href=""></a>              <span class="at">--language</span> c++ <span class="dt">\</span></span>
+<span id="cb3-3"><a href=""></a>              <span class="at">--model</span> gpt-4 <span class="dt">\</span></span>
+<span id="cb3-4"><a href=""></a>              <span class="at">--function</span> dateparse <span class="dt">\</span></span>
+<span id="cb3-5"><a href=""></a>              <span class="at">--target-dir</span> ../../dvhar/dateparse/ <span class="dt">\</span></span>
+<span id="cb3-6"><a href=""></a>              <span class="at">--out-dir</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="demo-time-2" class="slide level2">
+<h2>Demo Time</h2>
+<h3 id="result">Result</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href=""></a><span class="co">// out/01.rawoutput</span></span>
+<span id="cb4-2"><a href=""></a><span class="op">&lt;</span>code<span class="op">&gt;</span></span>
+<span id="cb4-3"><a href=""></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb4-4"><a href=""></a><span class="pp">#include </span><span class="im">&lt;stddef.h&gt;</span></span>
+<span id="cb4-5"><a href=""></a></span>
+<span id="cb4-6"><a href=""></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href=""></a>    <span class="dt">int</span> sec<span class="op">;</span>     <span class="co">/* seconds after the minute - [ 0 to 59 ] */</span></span>
+<span id="cb4-8"><a href=""></a>    <span class="dt">int</span> min<span class="op">;</span>     <span class="co">/* minutes after the hour - [ 0 to 59 ] */</span></span>
+<span id="cb4-9"><a href=""></a>    <span class="dt">int</span> hour<span class="op">;</span>    <span class="co">/* hours since midnight - [ 0 to 23] */</span></span>
+<span id="cb4-10"><a href=""></a>    <span class="dt">int</span> mday<span class="op">;</span>    <span class="co">/* day of the month - [ 1 to 31 ] */</span></span>
+<span id="cb4-11"><a href=""></a>    <span class="dt">int</span> mon<span class="op">;</span>     <span class="co">/* months since January - [ 0 to 11 ] */</span></span>
+<span id="cb4-12"><a href=""></a>    <span class="dt">int</span> year<span class="op">;</span>    <span class="co">/* years */</span></span>
+<span id="cb4-13"><a href=""></a>    <span class="dt">int</span> wday<span class="op">;</span>    <span class="co">/* days since Sunday - [ 0 to 6 ] */</span></span>
+<span id="cb4-14"><a href=""></a>    <span class="dt">int</span> yday<span class="op">;</span>    <span class="co">/* days since January 1 - [ 0 to 365 ] */</span></span>
+<span id="cb4-15"><a href=""></a><span class="op">}</span> date_t<span class="op">;</span></span>
+<span id="cb4-16"><a href=""></a></span>
+<span id="cb4-17"><a href=""></a><span class="kw">extern</span> <span class="dt">int</span> dateparse<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> datestr<span class="op">,</span> date_t<span class="op">*</span> t<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>offset<span class="op">,</span> <span class="dt">int</span> stringlen<span class="op">);</span></span>
+<span id="cb4-18"><a href=""></a></span>
+<span id="cb4-19"><a href=""></a><span class="dt">int</span> LLVMFuzzerTestOneInput<span class="op">(</span><span class="dt">const</span> <span class="dt">uint8_t</span> <span class="op">*</span>data<span class="op">,</span> <span class="dt">size_t</span> size<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-20"><a href=""></a>    <span class="co">// Ignore input if it is less than 1</span></span>
+<span id="cb4-21"><a href=""></a>    <span class="cf">if</span> <span class="op">(</span>size <span class="op">&lt;</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-22"><a href=""></a>        <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-23"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb4-24"><a href=""></a></span>
+<span id="cb4-25"><a href=""></a>    <span class="co">// Convert data to string</span></span>
+<span id="cb4-26"><a href=""></a>    <span class="dt">char</span> <span class="op">*</span>datestr <span class="op">=</span> <span class="op">(</span><span class="dt">char</span> <span class="op">*)</span>data<span class="op">;</span></span>
+<span id="cb4-27"><a href=""></a></span>
+<span id="cb4-28"><a href=""></a>    <span class="co">// Initialize a date_t struct and an offset integer</span></span>
+<span id="cb4-29"><a href=""></a>    date_t t<span class="op">;</span></span>
+<span id="cb4-30"><a href=""></a>    <span class="dt">int</span> offset <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-31"><a href=""></a></span>
+<span id="cb4-32"><a href=""></a>    <span class="co">// Call the function-under-test</span></span>
+<span id="cb4-33"><a href=""></a>    dateparse<span class="op">(</span>datestr<span class="op">,</span> <span class="op">&amp;</span>t<span class="op">,</span> <span class="op">&amp;</span>offset<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>size<span class="op">);</span></span>
+<span id="cb4-34"><a href=""></a></span>
+<span id="cb4-35"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-36"><a href=""></a><span class="op">}</span></span>
+<span id="cb4-37"><a href=""></a><span class="op">&lt;/</span>code<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="demo-time-3" class="slide level2">
+<h2>Demo Time</h2>
+<h3 id="problems-2">Problems</h3>
+<ol type="1">
+<li>Response wrapped in <code>&lt;code&gt;</code> tags.</li>
+<li>Even without them, harness does not compile.</li>
+<li>Missing headers.</li>
+</ol>
 </section></section>
 <section>
-<section id="personal-plan" class="title-slide slide level1 center" data-background-color="#40666e">
-<h1>Personal Plan</h1>
+<section id="where-do-we-go-from-here" class="title-slide slide level1 center" data-background-color="#40666e">
+<h1>Where do we go from here?</h1>
 
 </section>
-<section id="personal-plan-1" class="slide level2">
-<h2>Personal Plan</h2>
+<section id="future-work" class="slide level2">
+<h2>Future work</h2>
+<h3 id="high-level-goal">High-level goal</h3>
+<p>A GitHub action that when integrated to a C/C++ project will:</p>
+<ol type="1">
+<li>Use LLMs to create fuzz targets from scratch.</li>
+<li>Build and run them, evaluate them based on runtime, coverage etc.</li>
+<li>Create PRs to integrate them to the project.</li>
+</ol>
+</section>
+<section id="future-work-1" class="slide level2">
+<h2>Future work</h2>
+<h3 id="good-to-have-features">“Good to have” features</h3>
+<ol type="1">
+<li>No strict prerequisites
+<ul>
+<li>E.g. project structure, build system.</li>
+</ul></li>
+<li>Support for Python projects using the Atheris <span class="citation" data-cites="GoogleAtheris2025"><a href="#/references" role="doc-biblioref" onclick="">[11]</a></span> fuzzer.</li>
+</ol>
+</section>
+<section id="future-work-2" class="slide level2">
+<h2>Future work</h2>
+<h3 id="flowchart">Flowchart</h3>
 <div class="cell" data-reveal="true" data-layout-align="center">
-<div class="cell-output-display">
+<div class="cell-output-display margin-caption">
 <div>
 <p></p><figure class=""><p></p>
 <div>
-<pre class="mermaid mermaid-js">sequenceDiagram
-    Alice-&gt;&gt;+John: Hello John, how are you?
-    Alice-&gt;&gt;+John: John, can you hear me?
-    John--&gt;&gt;-Alice: Hi Alice, I can hear you!
-    John--&gt;&gt;-Alice: I feel great!
+<pre class="mermaid mermaid-js">%%{ init: { "flowchart": { "nodeSpacing": 30, "rankSpacing": 30 } } }%%
+flowchart LR
+    n1(["Start"]) --&gt; n2["Add action"]
+    n2 --&gt; n8["Project info"]
+    n3["LLM"] --&gt; n4[/"Gen harnesses"/]
+    n4 --&gt; n5{"Pass?"}
+    n5 -- False --&gt; n3
+    n5 -- True --&gt; n6["PR"]
+    n6 --&gt; n7(["End"])
+    n8 --&gt; n3
 </pre>
 </div>
 <p></p></figure><p></p>
 </div>
 </div>
 </div>
-</section></section>
-<section id="references" class="title-slide slide level1 smaller scrollable">
-<h1>References</h1>
-<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list">
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="smaller references csl-bib-body" data-entry-spacing="0" role="list">
 <div id="ref-manesArtScienceEngineering2019" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline">V. J. M. Manes <em>et al.</em>, <span>“The <span>Art</span>, <span>Science</span>, and <span>Engineering</span> of <span>Fuzzing</span>: <span>A Survey</span>.”</span> [Online]. Available: <a href="http://arxiv.org/abs/1812.00140">http://arxiv.org/abs/1812.00140</a></div>
 </div>
@@ -490,28 +707,47 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
 <div id="ref-AmericanFuzzyLop" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[3] </div><div class="csl-right-inline"><span>“American fuzzy lop.”</span> [Online]. Available: <a href="https://lcamtuf.coredump.cx/afl/">https://lcamtuf.coredump.cx/afl/</a></div>
 </div>
-<div id="ref-AFLplusplus-Woot20" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[4] </div><div class="csl-right-inline">A. Fioraldi, D. Maier, H. Eißfeldt, and M. Heuse, <span>“<span>AFL</span>++: <span>Combining</span> incremental steps of fuzzing research,”</span> in <em>14th <span>USENIX</span> workshop on offensive technologies (<span>WOOT</span> 20)</em>, USENIX Association, Aug. 2020.</div>
-</div>
 <div id="ref-heuseAFL2022" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[5] </div><div class="csl-right-inline">M. Heuse, H. Eißfeldt, A. Fioraldi, and D. Maier, <em><span>AFL</span>++</em>. (Jan. 2022). Available: <a href="https://github.com/AFLplusplus/AFLplusplus">https://github.com/AFLplusplus/AFLplusplus</a></div>
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">M. Heuse, H. Eißfeldt, A. Fioraldi, and D. Maier, <em><span>AFL</span>++</em>. (Jan. 2022). Available: <a href="https://github.com/AFLplusplus/AFLplusplus">https://github.com/AFLplusplus/AFLplusplus</a></div>
+</div>
+<div id="ref-aryaOSSFuzz2025" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">A. Arya, O. Chang, J. Metzman, K. Serebryany, and D. Liu, <em><span>OSS-Fuzz</span></em>. (Apr. 08, 2025). Available: <a href="https://github.com/google/oss-fuzz">https://github.com/google/oss-fuzz</a></div>
+</div>
+<div id="ref-GoogleClusterfuzz2025" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline"><em>Google/clusterfuzz</em>. (Apr. 09, 2025). Google. Available: <a href="https://github.com/google/clusterfuzz">https://github.com/google/clusterfuzz</a></div>
+</div>
+<div id="ref-HeartbleedBug" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline"><span>“Heartbleed <span>Bug</span>.”</span> [Online]. Available: <a href="https://heartbleed.com/">https://heartbleed.com/</a></div>
+</div>
+<div id="ref-OSSFuzzDocumentation" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline"><span>“<span>OSS-Fuzz Documentation</span>.”</span> [Online]. Available: <a href="https://google.github.io/oss-fuzz/">https://google.github.io/oss-fuzz/</a></div>
 </div>
 <div id="ref-Liu_OSS-Fuzz-Gen_Automated_Fuzz_2024" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[6] </div><div class="csl-right-inline">D. Liu, O. Chang, J. metzman, M. Sablotny, and M. Maruseac, <em><span class="nocase">OSS-fuzz-gen</span>: <span>Automated</span> fuzz target generation</em>. (May 2024). Available: <a href="https://github.com/google/oss-fuzz-gen">https://github.com/google/oss-fuzz-gen</a></div>
+<div class="csl-left-margin">[9] </div><div class="csl-right-inline">D. Liu, O. Chang, J. metzman, M. Sablotny, and M. Maruseac, <em><span class="nocase">OSS-fuzz-gen</span>: <span>Automated</span> fuzz target generation</em>. (May 2024). Available: <a href="https://github.com/google/oss-fuzz-gen">https://github.com/google/oss-fuzz-gen</a></div>
+</div>
+<div id="ref-oss-fuzzmaintainersIntroducingLLMbasedHarness2024" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[10] </div><div class="csl-right-inline">OSS-Fuzz Maintainers, <span>“Introducing <span class="nocase">LLM-based</span> harness synthesis for unfuzzed projects.”</span> [Online]. Available: <a href="https://blog.oss-fuzz.com/posts/introducing-llm-based-harness-synthesis-for-unfuzzed-projects/">https://blog.oss-fuzz.com/posts/introducing-llm-based-harness-synthesis-for-unfuzzed-projects/</a></div>
+</div>
+<div id="ref-GoogleAtheris2025" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[11] </div><div class="csl-right-inline"><em>Google/atheris</em>. (Apr. 09, 2025). Google. Available: <a href="https://github.com/google/atheris">https://github.com/google/atheris</a></div>
 </div>
 </div>
-<p>These slides can be found at: <a href="https://kchousos.github.io/presentations/oss-fuzz-gen/" class="uri">https://kchousos.github.io/presentations/oss-fuzz-gen/</a></p>
 </section>
-
+<section id="section" class="slide level2 center">
+<h2></h2>
+<p>These slides can be found at: <a href="https://kchousos.github.io/ofg-presentation/" class="uri">https://kchousos.github.io/ofg-presentation/</a></p>
+</section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="https://i.pinimg.com/originals/a8/90/ff/a890ffa123b1c2c6e2c069a3c9da20ea.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="https://i.pinimg.com/originals/a8/90/ff/a890ffa123b1c2c6e2c069a3c9da20ea.gif" class="quarto-figure quarto-figure-center"></a></p>
+<p><a href="https://i.pinimg.com/originals/a8/90/ff/a890ffa123b1c2c6e2c069a3c9da20ea.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="https://i.pinimg.com/originals/a8/90/ff/a890ffa123b1c2c6e2c069a3c9da20ea.gif" class="quarto-figure quarto-figure-center"></a></p>
 </figure>
 </div>
 
 </section>
+
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="https://feel4diabetes-study.eu/wp-content/uploads/2023/10/uoa_logo_eng-1024x271-1.png" class="slide-logo"></p>
@@ -656,7 +892,7 @@ Konstantinos Chousos <a href="https://orcid.org/0009-0008-6063-7915" class="quar
         // Specify the average time in seconds that you think you will spend
         // presenting each slide. This is used to show a pacing timer in the
         // speaker view
-        defaultTiming: null,
+        defaultTiming: 60,
 
         // Enable slide navigation via mouse wheel
         mouseWheel: false,
