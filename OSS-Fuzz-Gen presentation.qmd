@@ -42,6 +42,13 @@ format:
     1.  `from_scratch` branch
 4.  Future work
 
+::: notes
+1. Εισαγωγή στο fuzzing
+2. Πλατφόρμα στην οποία πατάει το ofg
+3. Παραπάνω πληροφορίες, προβλήματα που έχει
+4. Προσωπικό πλάνο για αντιμετώπιση αυτών των προβλημάτων
+:::
+
 # Fuzzing {background-color="#40666e"}
 
 ## Fuzzing
@@ -98,6 +105,12 @@ Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled fr
 > 
 > --- [Google](https://github.com/google/fuzzing/blob/master/docs/why-fuzz.md)
 
+::: notes
+1. Inputs από αναξιόπιστες πηγές
+2. Εξακρίβωση υλοποιήσεων
+3. Περίπλοκα projects/APIs
+:::
+
 ## Fuzzing
 
 ### Success stories
@@ -109,6 +122,10 @@ Fuzzing is the execution of a Program Under Test (PUT) using input(s) sampled fr
 - [Mayhem](https://www.mayhem.security/) (FKA ForAllSecure) [@simoniteThisBotHunts2020]
 	1. Cloudflare
 	2. OpenWRT
+:::
+
+::: notes
+ execute arbitrary commands and gain unauthorized access
 :::
 
 ## Fuzzing
@@ -203,6 +220,7 @@ Scalable, distributed, CI fuzzing solution for open-source projects [@aryaOSSFuz
     -   project.yaml
     -   Dockerfile
     -   build.sh
+- Only "big" (stars/loc) projects.
 -   Required Google developer account.
 
 [^1]: Must transform project to ClusterFuzz's [@GoogleClusterfuzz2025] structure.
@@ -274,8 +292,12 @@ we have implemented several “harness-generators” that take as input the intr
 
 ### Problems
 
+::: {.incremental}
 -   Project needs to be part of OSS-Fuzz to use OSS-Fuzz-Gen's capabilities.
     -   Same hinderances as OSS-Fuzz.
+- Project needs preexisting harnesses.
+- Results range from good to bad.
+:::
 
 # `from_scratch` Branch {background-color="#40666e"}
 
